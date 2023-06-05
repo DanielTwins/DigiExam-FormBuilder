@@ -1,38 +1,76 @@
-# Frontend Developer Homework Assignment
+## Part 1. Field Input Validation:
 
-## Objective:
+I started by get familiar with the existing code base and understanding its structure. After analyzing the code, I considered where to handle the validation logic. Initially, I implemented the validation logic within the FormBuilder component, which is the parent component for the InputField component. However, I realized that it would be better to separate the validation logic into a separate file or component to improve code organization and maintainability. As a result, I decided to create a custom hook called useValidation, which can be easily reused throughout the application.
 
-You will be working with an existing form builder. The builder provides a possibility to choose one of several field types, set a key, a label, and add it into a form. Your task is divided into two main parts.
+- The useValidation custom hook I created handles validation rules and error handling.
 
-## Task Details:
+- I used the useState hook to manage the error message state.
 
-### 1. Field Input Validation:
+- The hook takes two arguments: fieldType (representing the field type) and inputValue (representing the current input value).
 
-In the existing application, we need to add validation to each input field according to its assigned type. For instance, if a field's type is ParamType.Number, the system should not allow the input of any non-numeric characters or symbols. Conversely, if the type is ParamType.String, any character input should be acceptable.
+- These arguments are passed from the FormBuilder component using the state variables currentType, currentKey, and currentLabel.
 
-If a user attempts to input data that does not conform to the field's type, your solution should trigger an error function that displays an appropriate message. Validation should be triggered upon the blur event on each field.
+- Inside the useValidation hook, I used a switch case statement that checks the fieldType and implement the validation logic for each specific field type.
 
-### 2. Dynamic Validation Setting:
+- The function returns a boolean value which indicate the validity of the input based on the defined validation rules.
 
-In addition to basic field type validation, we need a feature that allows additional, user-defined validation rules to be set directly through the interface. This functionality should allow for rules such as:
+- At the end the useValidation hook exports the errorMessage and validateField function in an object.
 
-- The entered value must be greater than or equal to 5.
-- The input must begin with a capital letter.
-- The input must match a specific pattern (e.g., an email format).
-- The input must not contain any special characters.
-- The input must be a valid date. 
+- This approach would allow the FormBuilder component to access and use these values for error handling and validation checks.
 
-The interface should allow for the definition of these and other validation rules, without requiring modifications to the codebase for each new rule. The specifics of how you enable this dynamic rule-setting are up to you, but we're looking for an innovative, flexible, and scalable solution.
+- I believe that this modular approach improves code reusability and maintainability.
 
-## Submission:
+Overall, the useValidation hook centralizes the validation logic, making it easier to manage and reuse throughout the application.
 
-Submit your solution by pushing your code to a public GitHub repository. Ensure your code is clean, well-commented, and adheres to our current project structure. Also, include a README file that explains your thought process and the design of your solution.
 
-## Evaluation Criteria:
+Later the FormBuilder component utilizes the useValidation hook for validating the Key and Label fields and handling field submission.
 
-- The code must be clean, efficient and well-commented.
-- The solution should successfully implement the features described above.
-- The design should be scalable and maintainable, allowing for the possibility of adding more validation types in the future.
-- The README file should provide clear insight into your thought process and the rationale behind your design decisions.
+- The useValidation hook is used for validating both fields by passing in the field types and values.
 
-Good luck!
+- The validateKeyField and validateLabelField functions are called in the handleAddingField function to validate the respective fields.
+	
+- I store the result of the validation in constants.
+
+- Moreover, the constants are then used to check if the field validations pass the rules and are valid.
+
+- If the validations pass, the addField action is dispatched.
+
+- If the validations fail, an alert is displayed with an error message.
+
+Later on the InputField component receives an additional prop called type, which represents the FieldType for handling the blur event.
+
+- Initially I pass in the type and value arguments into the useValidation hook and retrieving the errorMessage and validateField function.
+
+- Then the onBlur event is implemented in the TextField component to handle the validation by calling the validateField function in the handleBlur function.
+
+- If the validation fails, the error message is rendered to the user.
+
+- The ErrorText element is created using styled components to render the error message.
+So, the onBlur event triggers the validation process and displays error messages if needed. The ErrorText element which is created and styled with styled-component library for rendering the error message to the user.
+
+
+## Part 2. Dynamic Validation Setting:
+I have not implemented or created the dynamic feature yet. However, below is my thought process and approach for solving the task:
+
+- I would start by creating a component called FormRulesView responsible for the UI part.
+
+- In the FormRulesView component, I would implement the JSX code to display the validation rules options to the user, optionally as checkboxes or a dropdown menu.
+
+- In the FormBuilder component, I would create an array of objects that contains the validation rules for each field type. This array will be used to populate the options in the FormRulesView component.
+ 
+- When the user select a field type, I use then a switch case statement to determine the selected type and display the corresponding validation rules options in the UI.
+
+- Then I would implement an onChange event handler in the FormRulesView component to capture the selected rules (checkbox values) and pass them to the useValidation hook for validation.
+
+- Then I handle the validation process in a handleAddingForm function in the FormBuilder component. If the validation is successful, dispatch the addField action and update the state accordingly.
+
+
+
+
+
+
+
+
+
+
+
